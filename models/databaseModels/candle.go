@@ -1,7 +1,9 @@
-package models
+package databaseModels
 
 import (
 	"time"
+
+	"github.com/shopspring/decimal"
 )
 
 type IntervalType int32
@@ -23,12 +25,12 @@ const (
 )
 
 type CandleModel struct {
-	ProductID    uint64       `gorm:"column:product_id"`
-	IntervalType IntervalType `gorm:"column:interval_type"`
-	Start        time.Time    `gorm:"column:start"`
-	Open         float64      `gorm:"column:open"`
-	Close        float64      `gorm:"column:close"`
-	High         float64      `gorm:"column:high"`
-	Low          float64      `gorm:"column:low"`
-	Volume       float64      `gorm:"column:volume"`
+	ProductID    uint64          `gorm:"column:product_id"`
+	IntervalType IntervalType    `gorm:"column:interval_type"`
+	Start        time.Time       `gorm:"column:start"`
+	Open         decimal.Decimal `gorm:"column:open"`
+	Close        decimal.Decimal `gorm:"column:close"`
+	High         decimal.Decimal `gorm:"column:high"`
+	Low          decimal.Decimal `gorm:"column:low"`
+	Volume       decimal.Decimal `gorm:"column:volume"`
 }

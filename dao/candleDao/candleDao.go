@@ -1,12 +1,10 @@
 package candleDao
 
 import (
-	"context"
 	"errors"
 	"time"
 
-	"github.com/paper-trade-chatbot/be-candle/logging"
-	models "github.com/paper-trade-chatbot/be-candle/models/databaseModels"
+	"github.com/paper-trade-chatbot/be-candle/models/databaseModels"
 	"github.com/paper-trade-chatbot/be-common/pagination"
 	"github.com/paper-trade-chatbot/be-proto/general"
 
@@ -20,6 +18,7 @@ type OrderColumn int
 const (
 	OrderColumn_None OrderColumn = iota
 	OrderColumn_Start
+	OrderColumn_ProductID
 )
 
 type OrderDirection int
@@ -38,18 +37,18 @@ type Order struct {
 // QueryModel set query condition, used by queryChain()
 type QueryModel struct {
 	ProductID    uint64
-	IntervalType models.IntervalType
+	IntervalType databaseModels.IntervalType
 	Start        *time.Time //只查單一時間點
 	ProductIDIn  []uint64
 	StartFrom    *time.Time
 	StartTo      *time.Time
-	OrderBy      []Order
+	OrderBy      []*Order
 	Offset       int
 	Limit        int
 }
 
 // New a row
-func New(db *gorm.DB, model *models.CandleModel) (int, error) {
+func New(db *gorm.DB, model *databaseModels.CandleModel) (int, error) {
 
 	err := db.Table(table).
 		Create(model).Error
@@ -61,7 +60,7 @@ func New(db *gorm.DB, model *models.CandleModel) (int, error) {
 }
 
 // New rows
-func News(db *gorm.DB, m []*models.CandleModel) (int, error) {
+func News(db *gorm.DB, m []*databaseModels.CandleModel) (int, error) {
 
 	err := db.Transaction(func(tx *gorm.DB) error {
 
@@ -69,7 +68,6 @@ func News(db *gorm.DB, m []*models.CandleModel) (int, error) {
 			CreateInBatches(m, 3000).Error
 
 		if err != nil {
-			logging.Error(context.Background(), "[candleDao.News] CreateInBatches error: %v", err)
 			return err
 		}
 		return nil
@@ -83,9 +81,9 @@ func News(db *gorm.DB, m []*models.CandleModel) (int, error) {
 }
 
 // Get return a record as raw-data-form
-func Get(tx *gorm.DB, query *QueryModel) (*models.CandleModel, error) {
+func Get(tx *gorm.DB, query *QueryModel) (*databaseModels.CandleModel, error) {
 
-	result := &models.CandleModel{}
+	result := &databaseModels.CandleModel{}
 	err := tx.Table(table).
 		Scopes(queryChain(query)).
 		Scan(result).Error
@@ -100,14 +98,14 @@ func Get(tx *gorm.DB, query *QueryModel) (*models.CandleModel, error) {
 }
 
 // Gets return records as raw-data-form
-func Gets(tx *gorm.DB, query *QueryModel) ([]models.CandleModel, error) {
-	result := make([]models.CandleModel, 0)
+func Gets(tx *gorm.DB, query *QueryModel) ([]databaseModels.CandleModel, error) {
+	result := make([]databaseModels.CandleModel, 0)
 	err := tx.Table(table).
 		Scopes(queryChain(query)).
 		Scan(&result).Error
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return []models.CandleModel{}, nil
+		return []databaseModels.CandleModel{}, nil
 	}
 
 	if err != nil {
@@ -117,9 +115,9 @@ func Gets(tx *gorm.DB, query *QueryModel) ([]models.CandleModel, error) {
 	return result, nil
 }
 
-func GetsWithPagination(tx *gorm.DB, query *QueryModel, paginate *general.Pagination) ([]models.CandleModel, *general.PaginationInfo, error) {
+func GetsWithPagination(tx *gorm.DB, query *QueryModel, paginate *general.Pagination) ([]databaseModels.CandleModel, *general.PaginationInfo, error) {
 
-	var rows []models.CandleModel
+	var rows []databaseModels.CandleModel
 	var count int64 = 0
 	err := tx.Table(table).
 		Scopes(queryChain(query)).
@@ -131,11 +129,11 @@ func GetsWithPagination(tx *gorm.DB, query *QueryModel, paginate *general.Pagina
 	paginationInfo := pagination.SetPaginationDto(paginate.Page, paginate.PageSize, int32(count), int32(offset))
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return []models.CandleModel{}, paginationInfo, nil
+		return []databaseModels.CandleModel{}, paginationInfo, nil
 	}
 
 	if err != nil {
-		return []models.CandleModel{}, nil, err
+		return []databaseModels.CandleModel{}, nil, err
 	}
 
 	return rows, paginationInfo, nil
@@ -175,9 +173,9 @@ func productIDEqualScope(productID uint64) func(db *gorm.DB) *gorm.DB {
 	}
 }
 
-func intervalTypeEqualScope(intervalType models.IntervalType) func(db *gorm.DB) *gorm.DB {
+func intervalTypeEqualScope(intervalType databaseModels.IntervalType) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
-		if intervalType != models.IntervalType_None {
+		if intervalType != databaseModels.IntervalType_None {
 			return db.Where(table+".interval_type = ?", intervalType)
 		}
 		return db
@@ -211,7 +209,7 @@ func startBetweenScope(startFrom, startTo *time.Time) func(db *gorm.DB) *gorm.DB
 	}
 }
 
-func orderByScope(order []Order) func(db *gorm.DB) *gorm.DB {
+func orderByScope(order []*Order) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if len(order) > 0 {
 			for _, o := range order {

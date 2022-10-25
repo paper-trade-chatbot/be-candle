@@ -5,7 +5,7 @@ go 1.18
 require (
 	cloud.google.com/go/logging v1.5.0
 	github.com/GoogleCloudPlatform/cloudsql-proxy v1.32.0
-	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d
+	github.com/deckarep/golang-set/v2 v2.1.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-contrib/pprof v1.4.0
 	github.com/gin-gonic/gin v1.8.1
@@ -15,11 +15,11 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/jinzhu/gorm v1.9.16
-	github.com/paper-trade-chatbot/be-common v0.0.0-20221019084418-15b49b2e4f01
-	github.com/paper-trade-chatbot/be-proto v0.0.0-20221024074401-31234b2733f2
+	github.com/paper-trade-chatbot/be-common v0.0.0-20221025093429-e95b993947a0
+	github.com/paper-trade-chatbot/be-proto v0.0.0-20221025104022-e3f51d76cf45
+	github.com/shopspring/decimal v1.2.0
 	github.com/tinylib/msgp v1.1.6
 	golang.org/x/net v0.0.0-20221019024206-cb67ada4b0ad
-	google.golang.org/genproto v0.0.0-20221018160656-63c7b68cfc55
 	google.golang.org/grpc v1.50.1
 	gorm.io/driver/mysql v1.4.3
 	gorm.io/gorm v1.24.0
@@ -65,6 +65,7 @@ require (
 	golang.org/x/time v0.0.0-20220722155302-e5dcc9cfc0b9 // indirect
 	google.golang.org/api v0.95.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
+	google.golang.org/genproto v0.0.0-20221024183307-1bc688fe9f3e // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
