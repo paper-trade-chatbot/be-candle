@@ -8,7 +8,9 @@ import (
 
 	"github.com/paper-trade-chatbot/be-candle/config"
 	"github.com/paper-trade-chatbot/be-candle/service/product"
+	"github.com/paper-trade-chatbot/be-candle/service/quote"
 	productGrpc "github.com/paper-trade-chatbot/be-proto/product"
+	quoteGrpc "github.com/paper-trade-chatbot/be-proto/quote"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 )
@@ -18,10 +20,15 @@ var (
 	ProductServiceHost    = config.GetString("PRODUCT_GRPC_HOST")
 	ProductServerGRpcPort = config.GetString("PRODUCT_GRPC_PORT")
 	productServiceConn    *grpc.ClientConn
+
+	QuoteServiceHost    = config.GetString("QUOTE_GRPC_HOST")
+	QuoteServerGRpcPort = config.GetString("QUOTE_GRPC_PORT")
+	quoteServiceConn    *grpc.ClientConn
 )
 
 type ServiceImpl struct {
 	ProductIntf product.ProductIntf
+	QuoteIntf   quote.QuoteIntf
 }
 
 func GrpcDial(addr string) (*grpc.ClientConn, error) {
@@ -43,10 +50,21 @@ func Initialize(ctx context.Context) {
 	fmt.Println("dial done")
 	productConn := productGrpc.NewProductServiceClient(productServiceConn)
 	Impl.ProductIntf = product.New(productConn)
+
+	addr = QuoteServiceHost + ":" + QuoteServerGRpcPort
+	fmt.Println("dial to order grpc server...", addr)
+	quoteServiceConn, err = GrpcDial(addr)
+	if err != nil {
+		fmt.Println("Can not connect to gRPC server:", err)
+	}
+	fmt.Println("dial done")
+	quoteConn := quoteGrpc.NewQuoteServiceClient(quoteServiceConn)
+	Impl.QuoteIntf = quote.New(quoteConn)
 }
 
 func Finalize(ctx context.Context) {
 	productServiceConn.Close()
+	quoteServiceConn.Close()
 }
 
 func clientInterceptor(ctx context.Context, method string, req interface{}, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {

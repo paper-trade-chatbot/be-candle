@@ -8,7 +8,7 @@ import (
 	"github.com/paper-trade-chatbot/be-candle/dao/candleDao"
 	"github.com/paper-trade-chatbot/be-candle/database"
 	"github.com/paper-trade-chatbot/be-candle/logging"
-	"github.com/paper-trade-chatbot/be-candle/models/databaseModels"
+	"github.com/paper-trade-chatbot/be-candle/models/dbModels"
 	"github.com/paper-trade-chatbot/be-candle/service"
 	common "github.com/paper-trade-chatbot/be-common"
 	"github.com/paper-trade-chatbot/be-common/pagination"
@@ -38,7 +38,7 @@ func (impl *CandleImpl) CreateCandles(ctx context.Context, in *candle.CreateCand
 		productIDSet.Add(c.GetProductID())
 	}
 
-	res, err := pagination.IteratePage[*product.GetProductsReq, *product.GetProductsRes](
+	res, err := pagination.IteratePageGRPC[*product.GetProductsReq, *product.GetProductsRes](
 		&product.GetProductsReq{
 			Id:         productIDSet.ToSlice(),
 			Pagination: pagination.NewPagination(3000),
@@ -67,7 +67,7 @@ func (impl *CandleImpl) CreateCandles(ctx context.Context, in *candle.CreateCand
 		return nil, common.ErrNoSuchProduct
 	}
 
-	models := []*databaseModels.CandleModel{}
+	models := []*dbModels.CandleModel{}
 	for _, cc := range in.GetCandleCharts() {
 		for _, s := range cc.GetCandleSticks() {
 
@@ -77,9 +77,9 @@ func (impl *CandleImpl) CreateCandles(ctx context.Context, in *candle.CreateCand
 			low, _ := decimal.NewFromString(s.GetLow())
 			volume, _ := decimal.NewFromString(s.GetVolume())
 
-			model := &databaseModels.CandleModel{
+			model := &dbModels.CandleModel{
 				ProductID:    uint64(cc.GetProductID()),
-				IntervalType: databaseModels.IntervalType(cc.GetIntervalType()),
+				IntervalType: dbModels.IntervalType(cc.GetIntervalType()),
 				Start:        time.Unix(s.GetStart(), 0),
 				Open:         open,
 				Close:        close,
@@ -123,7 +123,7 @@ func (impl *CandleImpl) GetCandles(ctx context.Context, in *candle.GetCandlesReq
 	}
 
 	queryModel := &candleDao.QueryModel{
-		IntervalType: databaseModels.IntervalType(in.IntervalType),
+		IntervalType: dbModels.IntervalType(in.IntervalType),
 		StartFrom:    &startTime,
 		StartTo:      &endTime,
 		ProductIDIn:  productIDIn,

@@ -6,7 +6,9 @@ import (
 	"runtime/debug"
 
 	"github.com/paper-trade-chatbot/be-candle/cache"
+	"github.com/paper-trade-chatbot/be-candle/cronjob"
 	"github.com/paper-trade-chatbot/be-candle/database"
+	"github.com/paper-trade-chatbot/be-candle/service"
 	"github.com/paper-trade-chatbot/be-candle/service/candle"
 	candleGrpc "github.com/paper-trade-chatbot/be-proto/candle"
 
@@ -53,6 +55,9 @@ func main() {
 	database.Initialize(ctx)
 	defer database.Finalize()
 
+	service.Initialize(ctx)
+	defer service.Finalize(ctx)
+
 	initConfig()
 
 	grpcAddress := fmt.Sprintf("%s:%s",
@@ -84,6 +89,9 @@ func main() {
 		config.GetString("SERVER_LISTEN_ADDRESS"),
 		config.GetString("SERVER_LISTEN_PORT"))
 	httpServer := server.CreateHttpServer(ctx, address)
+
+	// run cron job
+	go cronjob.Cron()
 
 	go func() {
 		logging.Info(ctx, "grpc serving")
