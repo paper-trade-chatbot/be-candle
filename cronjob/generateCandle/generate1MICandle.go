@@ -92,6 +92,8 @@ func Generate1MICandle(ctx context.Context) error {
 			to.Add(time.Hour * 24)
 		}
 
+		logging.Warn(ctx, "testing : %#v", q.Quotes)
+
 		for k, v := range q.Quotes {
 			quoteTime, err := time.Parse("150405", k)
 			if err != nil {
