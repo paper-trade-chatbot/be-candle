@@ -71,6 +71,7 @@ func Generate1MICandle(ctx context.Context) error {
 		from := time.Date(0, 0, 0, now.Add(-time.Minute).Hour(), now.Add(-time.Minute).Minute(), now.Add(-time.Minute).Second(), 0, time.UTC)
 		to := time.Date(0, 0, 0, now.Hour(), now.Minute(), now.Second(), 0, time.UTC)
 
+		logging.Warn(ctx, "testing : %#v", q.Quotes)
 		if _, ok := q.Quotes["latest"]; !ok {
 			logging.Error(ctx, "[Generate1MICandle] quote [%s] not having latest quote.", q.ProductID)
 			return err
@@ -91,8 +92,6 @@ func Generate1MICandle(ctx context.Context) error {
 		if isCrossingDate := (now.Hour() == 0 && now.Minute() == 0); isCrossingDate {
 			to.Add(time.Hour * 24)
 		}
-
-		logging.Warn(ctx, "testing : %#v", q.Quotes)
 
 		for k, v := range q.Quotes {
 			quoteTime, err := time.Parse("150405", k)
