@@ -77,6 +77,7 @@ func Generate1MICandle(ctx context.Context) error {
 			return err
 		}
 		latestPrice, _ := decimal.NewFromString(q.Quotes["latest"])
+		delete(q.Quotes, "latest")
 
 		closestToFrom := to // 用來找出最接近from的時間點
 		tempOpenQuote := latestPrice
