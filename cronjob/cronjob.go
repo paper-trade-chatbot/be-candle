@@ -18,6 +18,8 @@ import (
 
 func Cron() {
 
+	logging.Info(context.TODO(), "start cronjob")
+
 	scheduler := gocron.NewScheduler(time.UTC)
 
 	startTime := time.Now().Truncate(time.Minute)

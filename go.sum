@@ -396,6 +396,8 @@ github.com/onsi/gomega v1.20.0/go.mod h1:DtrZpjmvpn2mPm4YWQa0/ALMDj9v4YxLgojwPeR
 github.com/opentracing/opentracing-go v1.1.0/go.mod h1:UkNAQd3GIcIGf0SeVgPpRdFStlNbqXla1AfSYxPUl2o=
 github.com/paper-trade-chatbot/be-common v0.0.0-20221028073707-bc5f2035c324 h1:zMcoCRINpqI86s04SXYZKrIoBddsbYkdVqOkmW3bnGE=
 github.com/paper-trade-chatbot/be-common v0.0.0-20221028073707-bc5f2035c324/go.mod h1:vTto5AdwqXszPISNTAtHjWHl48Fkr0XPh7LVxnMfNbQ=
+github.com/paper-trade-chatbot/be-common v0.0.0-20221031022627-ad26e762cfec h1:LA1Z/mtB9/Az0jsNMbHACtDH6rImMXjmaXX+u8UdY44=
+github.com/paper-trade-chatbot/be-common v0.0.0-20221031022627-ad26e762cfec/go.mod h1:vTto5AdwqXszPISNTAtHjWHl48Fkr0XPh7LVxnMfNbQ=
 github.com/paper-trade-chatbot/be-proto v0.0.0-20221027063553-ffd7889677ac h1:bKgx3H/9ccXiEgoAbsHSj/ddKKEffb5C+95wwHKKQQs=
 github.com/paper-trade-chatbot/be-proto v0.0.0-20221027063553-ffd7889677ac/go.mod h1:EF2NN7p3eYKdCjTNBEpPue9l6lnLS5hrBYEUYUhnn5Q=
 github.com/paper-trade-chatbot/be-proto v0.0.0-20221028092446-1b08e625b63c h1:el7FdsdjHoFVpSuEBkuHQOzsYfJVsj23FGDaE4G4wNU=

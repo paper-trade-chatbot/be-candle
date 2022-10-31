@@ -30,17 +30,17 @@ func New(quoteClient quote.QuoteServiceClient) QuoteIntf {
 }
 
 func (impl *QuoteImpl) AddProductQuoteSources(ctx context.Context, in *quote.AddProductQuoteSourcesReq) (*quote.AddProductQuoteSourcesRes, error) {
-	return impl.AddProductQuoteSources(ctx, in)
+	return impl.QuoteClient.AddProductQuoteSources(ctx, in)
 }
 
 func (impl *QuoteImpl) ModifyProductQuoteSource(ctx context.Context, in *quote.ModifyProductQuoteSourceReq) (*quote.ModifyProductQuoteSourceRes, error) {
-	return impl.ModifyProductQuoteSource(ctx, in)
+	return impl.QuoteClient.ModifyProductQuoteSource(ctx, in)
 }
 
 func (impl *QuoteImpl) GetQuotes(ctx context.Context, in *quote.GetQuotesReq) (*quote.GetQuotesRes, error) {
-	return impl.GetQuotes(ctx, in)
+	return impl.QuoteClient.GetQuotes(ctx, in)
 }
 
 func (impl *QuoteImpl) DeleteQuotes(ctx context.Context, in *quote.DeleteQuotesReq) (*quote.DeleteQuotesRes, error) {
-	return impl.DeleteQuotes(ctx, in)
+	return impl.QuoteClient.DeleteQuotes(ctx, in)
 }

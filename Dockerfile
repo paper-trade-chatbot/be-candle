@@ -35,6 +35,8 @@ ENV GCS_BUCKET_NAME 'paper-trade-chatbot-bucket'
 
 ENV PRODUCT_GRPC_HOST 'be-product-service'
 ENV PRODUCT_GRPC_PORT '9999'
+ENV QUOTE_GRPC_HOST 'be-quote-service'
+ENV QUOTE_GRPC_PORT '9999'
 
 RUN apk add --update-cache tzdata
 COPY be-candle /be-candle
