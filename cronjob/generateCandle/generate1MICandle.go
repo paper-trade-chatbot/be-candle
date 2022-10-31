@@ -20,6 +20,7 @@ import (
 func Generate1MICandle(ctx context.Context) error {
 
 	now := time.Now().Truncate(time.Minute)
+	time.Sleep(time.Second * 1) // 等quote抓完報價
 
 	db := database.GetDB()
 
