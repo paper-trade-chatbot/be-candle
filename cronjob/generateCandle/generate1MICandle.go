@@ -2,7 +2,6 @@ package generateCandle
 
 import (
 	"context"
-	"math"
 	"strconv"
 	"time"
 
@@ -56,7 +55,7 @@ func Generate1MICandle(ctx context.Context) error {
 	to := now.Format("150405")
 	quoteData, err := service.Impl.QuoteIntf.GetQuotes(ctx, &quote.GetQuotesReq{
 		ProductIDs: productIDSet.ToSlice(),
-		Flag:       quote.GetQuotesReq_GetFlag_Quote,
+		Flag:       quote.GetQuotesReq_GetFlag_Quote | quote.GetQuotesReq_GetFlag_Latest,
 		GetFrom:    &from,
 		GetTo:      &to,
 	})
@@ -69,15 +68,25 @@ func Generate1MICandle(ctx context.Context) error {
 
 	for _, q := range quoteData.Quotes {
 
-		open := decimal.Zero
-		close := decimal.Zero
-		high := decimal.Zero
-		low := decimal.NewFromInt(math.MinInt)
-
 		from := time.Date(0, 0, 0, now.Add(-time.Minute).Hour(), now.Add(-time.Minute).Minute(), now.Add(-time.Minute).Second(), 0, time.UTC)
 		to := time.Date(0, 0, 0, now.Hour(), now.Minute(), now.Second(), 0, time.UTC)
+
+		if _, ok := q.Quotes["latest"]; !ok {
+			logging.Error(ctx, "[Generate1MICandle] quote [%s] not having latest quote.", q.ProductID)
+			return err
+		}
+		latestPrice, _ := decimal.NewFromString(q.Quotes["latest"])
+
 		closestToFrom := to // 用來找出最接近from的時間點
-		tempQuote := decimal.Zero
+		tempOpenQuote := latestPrice
+
+		closestToTo := from // 用來找出最接近to的時間點
+		tempCloseQuote := latestPrice
+
+		open := latestPrice
+		close := latestPrice
+		high := latestPrice
+		low := latestPrice
 
 		if isCrossingDate := (now.Hour() == 0 && now.Minute() == 0); isCrossingDate {
 			to.Add(time.Hour * 24)
@@ -96,13 +105,14 @@ func Generate1MICandle(ctx context.Context) error {
 				quoteTime = quoteTime.Add(time.Hour * 24)
 			}
 
-			if quoteTime.Equal(to) {
-				close = price
+			if quoteTime.After(closestToTo) && !quoteTime.After(to) {
+				closestToTo = quoteTime
+				tempCloseQuote = price
 			}
 
 			if quoteTime.Before(closestToFrom) && quoteTime.After(from) {
 				closestToFrom = quoteTime
-				tempQuote = price
+				tempOpenQuote = price
 			}
 
 			if price.LessThan(low) {
@@ -113,7 +123,8 @@ func Generate1MICandle(ctx context.Context) error {
 				high = price
 			}
 		}
-		open = tempQuote
+		open = tempOpenQuote
+		close = tempCloseQuote
 
 		candleChart := &dbModels.CandleModel{
 			ProductID:    uint64(q.ProductID),

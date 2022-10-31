@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `be-candle`.`candle`
     `close` DOUBLE(20,10) NOT NULL COMMENT '收盤價',
     `high` DOUBLE(20,10) NOT NULL COMMENT '最高價',
     `low` DOUBLE(20,10) NOT NULL COMMENT '最低價',
-    `quantity` DOUBLE(20,10) NOT NULL COMMENT '成交量',
+    `volume` DOUBLE(20,10) NOT NULL COMMENT '成交量',
     PRIMARY KEY (`product_id`, `interval_type`, `start`)
 ) DEFAULT CHARSET=`utf8mb4` COLLATE=`utf8mb4_general_ci` COMMENT 'k線';
 
