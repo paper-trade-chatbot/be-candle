@@ -194,7 +194,7 @@ func startEqualScope(start *time.Time) func(db *gorm.DB) *gorm.DB {
 func productIDInScope(productIDIn []uint64) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if len(productIDIn) > 0 {
-			return db.Where(table+".product_id IN = ?", productIDIn)
+			return db.Where(table+".product_id IN ?", productIDIn)
 		}
 		return db
 	}
