@@ -105,6 +105,7 @@ func (impl *CandleImpl) CreateCandles(ctx context.Context, in *candle.CreateCand
 }
 
 func (impl *CandleImpl) GetCandles(ctx context.Context, in *candle.GetCandlesReq) (*candle.GetCandlesRes, error) {
+	logging.Info(ctx, "[GetCandles] test")
 	db := database.GetDB()
 
 	startTime := time.Unix(in.StartTime, 0)
