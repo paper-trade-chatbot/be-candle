@@ -40,6 +40,8 @@ func (db *mysqlDB) initialize(ctx context.Context, cfg dbConfig) {
 		logging.Error(ctx, "mysql init err %v", err)
 		panic(err)
 	}
+
+	db.Debug()
 }
 
 // finalize finalizes the MySQL database handle.
