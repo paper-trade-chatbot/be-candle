@@ -203,7 +203,7 @@ func productIDInScope(productIDIn []uint64) func(db *gorm.DB) *gorm.DB {
 func startBetweenScope(startFrom, startTo *time.Time) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if startFrom != nil && startTo != nil {
-			return db.Where(table+".start BEWTEEN = ? AND ?", startFrom, startTo)
+			return db.Where(table+".start BEWTEEN ? AND ?", startFrom, startTo)
 		}
 		return db
 	}
