@@ -11,9 +11,9 @@ import (
 	"github.com/go-co-op/gocron"
 	"github.com/go-redis/redis/v9"
 	"github.com/gofrs/uuid"
-	"github.com/paper-trade-chatbot/be-candle/cache"
 	"github.com/paper-trade-chatbot/be-candle/cronjob/generateCandle"
-	"github.com/paper-trade-chatbot/be-candle/logging"
+	"github.com/paper-trade-chatbot/be-common/cache"
+	"github.com/paper-trade-chatbot/be-common/logging"
 )
 
 func Cron() {
@@ -67,12 +67,11 @@ func work(cronjob func(context.Context) error, generateKey func() string, maxDur
 	case <-ctxTimeout.Done():
 		logging.Error(ctxTimeout, "[Cronjob] %s timeout error: %v", key, ctxTimeout.Err())
 	case <-ch:
-
 	}
 
 	value, err := r.Get(ctx, key).Result()
-	if err != redis.Nil && value == cronjobID.String() {
-		if err := r.Del(ctx, key).Err(); err != nil && err != redis.Nil {
+	if err != nil && err.Error() != redis.Nil.Error() && value == cronjobID.String() {
+		if err := r.Del(ctx, key).Err(); err != nil && err.Error() != redis.Nil.Error() {
 			logging.Error(ctxTimeout, "[Cronjob] %s failed to delete key: %v", key, err)
 		}
 	}

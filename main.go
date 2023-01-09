@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"runtime/debug"
 
-	"github.com/paper-trade-chatbot/be-candle/cache"
 	"github.com/paper-trade-chatbot/be-candle/cronjob"
-	"github.com/paper-trade-chatbot/be-candle/database"
 	"github.com/paper-trade-chatbot/be-candle/service"
 	"github.com/paper-trade-chatbot/be-candle/service/candle"
+	"github.com/paper-trade-chatbot/be-common/cache"
+	"github.com/paper-trade-chatbot/be-common/database"
 	candleGrpc "github.com/paper-trade-chatbot/be-proto/candle"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
@@ -19,10 +19,10 @@ import (
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
 
-	"github.com/paper-trade-chatbot/be-candle/config"
-	"github.com/paper-trade-chatbot/be-candle/global"
-	"github.com/paper-trade-chatbot/be-candle/logging"
-	"github.com/paper-trade-chatbot/be-candle/server"
+	"github.com/paper-trade-chatbot/be-common/config"
+	"github.com/paper-trade-chatbot/be-common/global"
+	"github.com/paper-trade-chatbot/be-common/logging"
+	"github.com/paper-trade-chatbot/be-common/server"
 )
 
 func main() {

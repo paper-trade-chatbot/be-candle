@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/paper-trade-chatbot/be-candle/logging"
+	"github.com/paper-trade-chatbot/be-common/logging"
 
-	"github.com/paper-trade-chatbot/be-candle/config"
 	"github.com/paper-trade-chatbot/be-candle/service/product"
 	"github.com/paper-trade-chatbot/be-candle/service/quote"
+	"github.com/paper-trade-chatbot/be-common/config"
 	productGrpc "github.com/paper-trade-chatbot/be-proto/product"
 	quoteGrpc "github.com/paper-trade-chatbot/be-proto/quote"
 	"google.golang.org/grpc"

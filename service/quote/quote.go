@@ -3,7 +3,7 @@ package quote
 import (
 	"context"
 
-	"github.com/paper-trade-chatbot/be-candle/config"
+	"github.com/paper-trade-chatbot/be-common/config"
 	"github.com/paper-trade-chatbot/be-proto/quote"
 )
 

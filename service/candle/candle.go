@@ -6,11 +6,11 @@ import (
 
 	mapset "github.com/deckarep/golang-set/v2"
 	"github.com/paper-trade-chatbot/be-candle/dao/candleDao"
-	"github.com/paper-trade-chatbot/be-candle/database"
-	"github.com/paper-trade-chatbot/be-candle/logging"
 	"github.com/paper-trade-chatbot/be-candle/models/dbModels"
 	"github.com/paper-trade-chatbot/be-candle/service"
 	common "github.com/paper-trade-chatbot/be-common"
+	"github.com/paper-trade-chatbot/be-common/database"
+	"github.com/paper-trade-chatbot/be-common/logging"
 	"github.com/paper-trade-chatbot/be-common/pagination"
 	"github.com/paper-trade-chatbot/be-proto/candle"
 	"github.com/paper-trade-chatbot/be-proto/product"
@@ -105,7 +105,6 @@ func (impl *CandleImpl) CreateCandles(ctx context.Context, in *candle.CreateCand
 }
 
 func (impl *CandleImpl) GetCandles(ctx context.Context, in *candle.GetCandlesReq) (*candle.GetCandlesRes, error) {
-	logging.Info(ctx, "[GetCandles] test")
 	db := database.GetDB()
 
 	startTime := time.Unix(in.StartTime, 0)
@@ -150,7 +149,7 @@ func (impl *CandleImpl) GetCandles(ctx context.Context, in *candle.GetCandlesReq
 		c := &candle.GetCandlesResElement{
 			ProductID:    int64(m.ProductID),
 			IntervalType: candle.IntervalType(m.IntervalType),
-			CandleSticks: &candle.CandleStick{
+			CandleStick: &candle.CandleStick{
 				Start:  m.Start.Unix(),
 				Open:   m.Open.String(),
 				Close:  m.Close.String(),

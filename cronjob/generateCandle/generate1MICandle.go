@@ -7,10 +7,10 @@ import (
 
 	mapset "github.com/deckarep/golang-set/v2"
 	"github.com/paper-trade-chatbot/be-candle/dao/candleDao"
-	"github.com/paper-trade-chatbot/be-candle/database"
-	"github.com/paper-trade-chatbot/be-candle/logging"
 	"github.com/paper-trade-chatbot/be-candle/models/dbModels"
 	"github.com/paper-trade-chatbot/be-candle/service"
+	"github.com/paper-trade-chatbot/be-common/database"
+	"github.com/paper-trade-chatbot/be-common/logging"
 	"github.com/paper-trade-chatbot/be-common/pagination"
 	"github.com/paper-trade-chatbot/be-proto/product"
 	"github.com/paper-trade-chatbot/be-proto/quote"
